@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lune D'Or</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#1a2744;--navy-deep:#0d1729;--navy-mid:#243362;
+  --gold:#c9a84c;--gold-light:#e8c97a;--gold-pale:#f5e8c0;
+  --cream:#f8f5f0;--cream-dark:#ede8df;
+  --text:#1a2744;--text-muted:#5a6a8a;--white:#ffffff;
+  --s-bg:#d1fae5;--s-txt:#065f46;
+  --w-bg:#fef3c7;--w-txt:#92400e;
+  --d-bg:#fee2e2;--d-txt:#991b1b;
+  --i-bg:#dbeafe;--i-txt:#1e40af;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Cormorant Garamond',serif;background:var(--cream);color:var(--text);overflow-x:hidden}
+.pf{font-family:'Playfair Display',serif}
+
+input[type="text"],input[type="email"],input[type="password"],input[type="number"],input[type="tel"],select,textarea{
+  color:#1a2744;-webkit-text-fill-color:#1a2744;background-color:#ffffff;
+  font-family:'Cormorant Garamond',serif;-webkit-appearance:none;border-radius:0;
+}
+input:-webkit-autofill{-webkit-text-fill-color:#1a2744!important;-webkit-box-shadow:0 0 0 100px #fff inset!important}
+input::placeholder,textarea::placeholder{color:#b0b8cc;-webkit-text-fill-color:#b0b8cc}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 2.5rem;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s ease}
+nav.scrolled{background:rgba(26,39,68,0.97);backdrop-filter:blur(12px);box-shadow:0 2px 32px rgba(0,0,0,0.25)}
+nav.light{background:transparent}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.nav-logo-mark{width:36px;height:36px}
+.nav-logo-mark svg{width:100%;height:100%}
+.nav-brand{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:600;color:var(--gold);letter-spacing:0.08em}
+.nav-links{display:flex;align-items:center;gap:2.2rem}
+.nav-links a{font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.85);text-decoration:none;transition:color 0.25s;position:relative;cursor:pointer}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s ease}
+.nav-links a:hover{color:var(--gold-light)}
+.nav-links a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:1.2rem}
+.cart-btn{position:relative;background:none;border:1px solid rgba(201,168,76,0.4);border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s}
+.cart-btn:hover{border-color:var(--gold);background:rgba(201,168,76,0.1)}
+.cart-badge{position:absolute;top:-5px;right:-5px;background:var(--gold);color:var(--navy-deep);font-size:0.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:sans-serif}
+
+.page{display:none;min-height:100vh;animation:fadeIn 0.5s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.hero{height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--navy-deep)}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0d1729 0%,#1a2744 40%,#2a3d6e 70%,#1a2744 100%);animation:kenburns 10s ease-in-out infinite alternate}
+.hero-pattern{position:absolute;inset:0;opacity:0.06;background-image:radial-gradient(circle at 25% 25%,var(--gold) 1px,transparent 1px),radial-gradient(circle at 75% 75%,var(--gold) 1px,transparent 1px);background-size:48px 48px}
+.hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.12) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
+@keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.06)}}
+.hero-content{position:relative;text-align:center;padding:2rem}
+.hero-eyebrow{font-family:'Cormorant Garamond',serif;font-size:0.8rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;opacity:0;animation:slideUp 0.8s ease 0.3s forwards}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,8vw,7rem);font-weight:700;color:var(--white);line-height:1.0;margin-bottom:1rem;opacity:0;animation:slideUp 0.9s ease 0.5s forwards}
+.hero-title em{color:var(--gold);font-style:italic}
+.hero-subtitle{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;color:rgba(255,255,255,0.65);letter-spacing:0.15em;margin-bottom:2.5rem;opacity:0;animation:slideUp 0.8s ease 0.8s forwards}
+.hero-divider{width:60px;height:1px;background:var(--gold);margin:0 auto 2.5rem;opacity:0;animation:slideUp 0.8s ease 0.9s forwards}
+.btn-primary{display:inline-block;padding:0.9rem 2.5rem;border:1px solid var(--gold);color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:0.85rem;letter-spacing:0.25em;text-transform:uppercase;text-decoration:none;cursor:pointer;background:transparent;transition:all 0.35s ease;opacity:0;animation:slideUp 0.8s ease 1s forwards}
+.btn-primary:hover{background:var(--gold);color:var(--navy-deep)}
+.btn-solid{background:var(--gold);color:var(--navy-deep);border:1px solid var(--gold);padding:0.85rem 2rem;font-family:'Cormorant Garamond',serif;font-size:0.85rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s ease;text-decoration:none;display:inline-block}
+.btn-solid:hover{background:var(--gold-light)}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.section{padding:6rem 2.5rem}.section-sm{padding:4rem 2.5rem}
+.container{max-width:1200px;margin:0 auto}
+.section-label{font-size:0.72rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-family:'Cormorant Garamond',serif}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:600;color:var(--navy);line-height:1.15;margin-bottom:1.5rem}
+.gold-line{width:48px;height:2px;background:var(--gold);margin:1.5rem 0}.gold-line.center{margin:1.5rem auto}
+
+.brand-section{background:var(--navy);padding:6rem 2.5rem}
+.brand-inner{max-width:800px;margin:0 auto;text-align:center}
+.brand-quote{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2.2rem);font-style:italic;font-weight:400;color:var(--cream);line-height:1.6;margin-bottom:2rem}
+.brand-body{font-size:1.05rem;color:rgba(248,245,240,0.65);line-height:1.9;letter-spacing:0.02em;font-weight:300}
+.brand-stars{color:var(--gold);font-size:1.2rem;letter-spacing:0.3em;margin-bottom:2rem;display:block}
+
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2rem}
+.product-card{background:var(--white);cursor:pointer;transition:all 0.35s ease;border:1px solid transparent;position:relative;overflow:hidden}
+.product-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 20px 60px rgba(26,39,68,0.12)}
+.product-card-img{height:320px;background:linear-gradient(135deg,#e8e0d5 0%,#d4c9ba 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.product-card-img .perfume-icon{transition:transform 0.4s ease}
+.product-card:hover .perfume-icon{transform:scale(1.08)}
+.product-card-body{padding:1.5rem}
+.product-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--navy);margin-bottom:0.4rem}
+.product-cat{font-size:0.72rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem}
+.product-price{font-size:1.2rem;color:var(--navy);font-weight:500;margin-bottom:1rem;font-family:'Playfair Display',serif}
+.sold-badge{position:absolute;top:1rem;right:1rem;background:var(--navy);color:var(--cream);font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.35rem 0.75rem;font-family:'Cormorant Garamond',serif}
+
+.filters{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
+.filter-btn{padding:0.55rem 1.5rem;background:transparent;border:1px solid rgba(26,39,68,0.2);font-family:'Cormorant Garamond',serif;font-size:0.85rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.25s;color:var(--text-muted)}
+.filter-btn.active{border-color:var(--gold);color:var(--navy);position:relative}
+.filter-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold)}
+.filter-btn:hover{border-color:var(--gold);color:var(--navy)}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,23,41,0.85);z-index:2000;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex;animation:fadeIn 0.3s ease}
+.pmodal{background:var(--cream);max-width:700px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--navy);z-index:10}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.modal-img{height:400px;background:linear-gradient(135deg,#e8e0d5,#d4c9ba);display:flex;align-items:center;justify-content:center}
+.modal-info{padding:2.5rem 2rem;display:flex;flex-direction:column;justify-content:center}
+.qty-control{display:flex;align-items:center;gap:1rem;margin:1.5rem 0}
+.qty-btn{width:36px;height:36px;border:1px solid var(--navy);background:none;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;color:var(--navy)}
+.qty-btn:hover{background:var(--navy);color:var(--white)}
+.qty-num{font-family:'Playfair Display',serif;font-size:1.3rem;min-width:30px;text-align:center}
+
+.cart-overlay{display:none;position:fixed;inset:0;background:rgba(13,23,41,0.5);z-index:1500}
+.cart-overlay.open{display:block;animation:fadeIn 0.3s ease}
+.cart-drawer{position:fixed;right:-420px;top:0;bottom:0;width:420px;background:var(--cream);z-index:1600;transition:right 0.4s cubic-bezier(0.4,0,0.2,1);padding:2rem;overflow-y:auto;display:flex;flex-direction:column}
+.cart-drawer.open{right:0}
+.cart-summary-box{background:var(--white);border:1px solid rgba(201,168,76,.3);padding:1.25rem 1.5rem;margin-top:.25rem}
+.cart-summary-item{display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;border-bottom:1px solid rgba(201,168,76,.1);font-size:.95rem}
+.cart-summary-item:last-child{border:none}
+.cart-summary-item strong{font-family:'Playfair Display',serif;color:var(--gold)}
+.cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--cream-dark)}
+.cart-item{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--cream-dark)}
+.cart-item-img{width:70px;height:70px;background:linear-gradient(135deg,#e8e0d5,#d4c9ba);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.cart-total-row{margin-top:auto;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.3)}
+.cart-total-line{display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.95rem}
+.cart-total-line.final{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:600;color:var(--navy);margin-top:0.5rem}
+
+.livraison-hero{background:var(--navy);padding:8rem 2.5rem 4rem;text-align:center}
+.form-section{padding:4rem 2.5rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:900px;margin:0 auto}
+.form-group{display:flex;flex-direction:column;gap:0.5rem}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);font-family:'Cormorant Garamond',serif}
+.form-input,.form-select,.form-textarea{padding:0.85rem 1rem;border:1px solid rgba(26,39,68,0.2);background:var(--white);font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--navy);transition:border-color 0.2s;outline:none;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold)}
+.form-textarea{resize:vertical;min-height:100px}
+.order-summary{background:var(--navy);color:var(--cream);padding:2rem;margin-bottom:3rem;max-width:900px;margin-left:auto;margin-right:auto}
+.summary-row{display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.95rem}
+.summary-row.total{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;border-top:1px solid rgba(201,168,76,0.3);padding-top:0.75rem;margin-top:0.75rem;color:var(--gold)}
+
+.success-overlay{display:none;position:fixed;inset:0;background:rgba(13,23,41,0.95);z-index:3000;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:2rem}
+.success-overlay.open{display:flex;animation:fadeIn 0.5s ease}
+.success-check{width:80px;height:80px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;animation:scaleIn 0.5s ease 0.3s both}
+@keyframes scaleIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.checkmark{stroke-dasharray:50;stroke-dashoffset:50;animation:draw 0.6s ease 0.8s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+footer{background:var(--navy-deep);padding:4rem 2.5rem 2rem;text-align:center}
+.footer-logo{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);letter-spacing:0.15em;margin-bottom:1rem}
+.footer-tagline{font-size:0.8rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:2rem}
+.footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:2rem;flex-wrap:wrap}
+.footer-links a{font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.2s;cursor:pointer}
+.footer-links a:hover{color:var(--gold)}
+.footer-contact{font-size:0.9rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;line-height:1.8}
+.social-row{display:flex;justify-content:center;gap:1.5rem;margin-bottom:2.5rem}
+.social-btn{width:44px;height:44px;border:1px solid rgba(201,168,76,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;background:none;animation:pulse 2s ease-in-out infinite;text-decoration:none}
+.social-btn:hover{border-color:var(--gold);background:rgba(201,168,76,0.1);transform:rotate(10deg) scale(1.2);animation:none}
+.social-btn:nth-child(2){animation-delay:0.5s}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.footer-copy{font-size:0.75rem;color:rgba(255,255,255,0.25);border-top:1px solid rgba(255,255,255,0.08);padding-top:1.5rem}
+
+.story-hero{background:var(--navy);min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 2.5rem 5rem;position:relative;overflow:hidden}
+.story-pattern{position:absolute;inset:0;opacity:0.04;background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%);background-size:30px 30px}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem}
+.value-card{text-align:center;padding:2.5rem 2rem;border:1px solid rgba(201,168,76,0.2);background:var(--white);transition:all 0.3s}
+.value-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.value-icon{font-size:2rem;margin-bottom:1rem}
+.value-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--navy);margin-bottom:0.75rem}
+.value-text{font-size:0.95rem;color:var(--text-muted);line-height:1.7;font-weight:300}
+.gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3rem}
+.gallery-item{background:linear-gradient(135deg,#e8e0d5,#d4c9ba);display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+.gallery-item:hover{transform:scale(1.02)}
+.gallery-item:nth-child(1){height:280px}.gallery-item:nth-child(2){height:200px}
+.gallery-item:nth-child(3){height:200px}.gallery-item:nth-child(4){height:280px}
+
+.contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:4rem;max-width:1100px;margin:0 auto}
+.info-cards{display:flex;flex-direction:column;gap:1.2rem}
+.info-card{display:flex;gap:1.2rem;padding:1.5rem;background:var(--white);border:1px solid rgba(201,168,76,0.15)}
+.info-card-icon{width:44px;height:44px;background:rgba(201,168,76,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem}
+.info-card-text h4{font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--navy);margin-bottom:0.25rem}
+.info-card-text p{font-size:0.9rem;color:var(--text-muted);line-height:1.6}
+.map-embed{margin-top:1.5rem;border:1px solid rgba(201,168,76,0.2);height:180px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#dde4f0,#c8d4e8);cursor:pointer;transition:all 0.3s;text-decoration:none}
+.map-embed:hover{border-color:var(--gold)}
+
+/* Delivery type toggle */
+.delivery-type-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.25rem}
+.dtype-btn{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:1rem .75rem;border:1.5px solid rgba(26,39,68,.18);background:#fff;cursor:pointer;transition:all .25s;font-family:'Cormorant Garamond',serif;position:relative}
+.dtype-btn:hover{border-color:rgba(201,168,76,.5)}
+.dtype-btn.active{border-color:var(--gold);background:rgba(201,168,76,.06)}
+.dtype-btn.active::after{content:'✓';position:absolute;top:.45rem;right:.65rem;font-size:.7rem;color:var(--gold);font-weight:700}
+.dtype-icon{font-size:1.4rem;line-height:1}
+.dtype-label{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+.dtype-btn.active .dtype-label{color:var(--navy)}
+.dtype-price{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold)}
+
+.shop-hero{background:var(--navy);padding:8rem 2.5rem 4rem;text-align:center}
+
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);padding:.8rem 1.8rem;z-index:99999;font-family:'Cormorant Garamond',serif;font-size:1rem;letter-spacing:.05em;transition:transform .4s cubic-bezier(.22,1,.36,1);white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.3);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.t-ok,.toast.navy-toast{background:var(--navy);color:var(--gold)}
+.toast.t-gold,.toast.gold-toast{background:var(--gold);color:var(--navy-deep);font-weight:700}
+.toast.t-err{background:#991b1b;color:#fff}
+
+.text-center{text-align:center}.flex-center{display:flex;align-items:center;justify-content:center}
+.mt-1{margin-top:.5rem}.mt-2{margin-top:1rem}.mt-3{margin-top:1.5rem}.mt-4{margin-top:2rem}
+.mb-4{margin-bottom:2rem}.w-full{width:100%}
+
+/* ═══════════════ ADMIN ═══════════════ */
+#adminLoginOv{display:none;position:fixed;inset:0;z-index:10000;background:rgba(5,10,25,.93);align-items:center;justify-content:center;padding:1rem}
+#adminLoginOv.show{display:flex}
+.lbox{background:var(--cream);width:100%;max-width:420px;padding:3rem 2.5rem;border-top:3px solid var(--gold);box-shadow:0 40px 100px rgba(0,0,0,.5);animation:slideUp .4s cubic-bezier(.22,1,.36,1)}
+.lbox-logo{text-align:center;margin-bottom:2rem}
+.lbox-star{width:54px;height:54px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem}
+.lbox h2{font-family:'Playfair Display',serif;font-size:1.7rem;font-style:italic;color:var(--navy)}
+.lbox .sub{font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text-muted);margin-top:.2rem}
+.fld{margin-bottom:1.4rem}
+.fld label{display:block;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.45rem;font-weight:600}
+.fld input{display:block;width:100%;padding:.88rem 1rem;border:1.5px solid rgba(26,39,68,.2);font-size:1.05rem;outline:none;transition:border-color .2s}
+.fld input:focus{border-color:var(--gold)}
+.err-box{display:none;background:#fee2e2;color:#991b1b;font-size:.85rem;text-align:center;padding:.55rem;margin-bottom:1rem;border-radius:2px}
+.btn-login{display:block;width:100%;padding:1rem;background:var(--navy);color:var(--gold);border:none;font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:background .25s}
+.btn-login:hover{background:var(--navy-mid)}
+.btn-cancel-l{display:block;width:100%;margin-top:.7rem;padding:.6rem;background:none;border:none;font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);cursor:pointer}
+.btn-cancel-l:hover{color:var(--navy)}
+
+#page-admin{background:#eee9e0;min-height:100vh}
+.admin-topbar{background:var(--navy-deep);padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:72px;z-index:500;border-bottom:1px solid rgba(201,168,76,.2)}
+.tb-brand{display:flex;align-items:center;gap:.75rem}
+.tb-name{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--gold);letter-spacing:.1em}
+.tb-tag{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-left:.4rem}
+.logout-btn,.back-btn{padding:.38rem 1.1rem;background:none;border:1px solid rgba(201,168,76,.3);color:rgba(255,255,255,.5);font-family:'Cormorant Garamond',serif;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.logout-btn:hover,.back-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);background:var(--navy);border-bottom:1px solid rgba(201,168,76,.15)}
+.stat{text-align:center;padding:1.2rem .5rem}
+.stat-n{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold)}
+.stat-l{font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:.2rem}
+
+.admin-tabs-bar{background:var(--navy-deep);padding:0 2rem;border-bottom:1px solid rgba(201,168,76,.1);display:flex;overflow-x:auto}
+.atab{padding:.95rem 1.5rem;background:none;border:none;border-bottom:2px solid transparent;font-family:'Cormorant Garamond',serif;font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.38);cursor:pointer;transition:all .2s;white-space:nowrap;margin-bottom:-1px}
+.atab:hover{color:rgba(255,255,255,.7)}
+.atab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.tcnt{background:rgba(201,168,76,.2);color:var(--gold);font-size:.6rem;padding:.1rem .4rem;border-radius:10px;margin-left:4px}
+
+.admin-content{padding:1.75rem 2rem;max-width:1500px;margin:0 auto}
+.apanel{display:none}.apanel.on{display:block;animation:fadeIn .3s}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1px solid rgba(201,168,76,.2);flex-wrap:wrap;gap:1rem}
+.ph-l .sub{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.2rem}
+.ph-l h2{font-family:'Playfair Display',serif;font-size:1.4rem;font-style:italic;color:var(--navy)}
+
+.tw{overflow-x:auto;box-shadow:0 2px 20px rgba(26,39,68,.08)}
+.atable{width:100%;border-collapse:collapse;background:#fff;font-size:.87rem;min-width:900px}
+.atable thead tr{background:var(--navy)}
+.atable th{padding:.85rem 1rem;text-align:left;font-family:'Cormorant Garamond',serif;font-size:.67rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.atable td{padding:.85rem 1rem;border-bottom:1px solid rgba(26,39,68,.05);vertical-align:middle}
+.atable tr:last-child td{border:none}
+.atable tr:hover td{background:rgba(201,168,76,.025)}
+.td-b{font-weight:700;color:var(--navy)}
+.td-pf{font-family:'Playfair Display',serif;font-weight:700;color:var(--navy)}
+.td-m{color:var(--text-muted);font-size:.82rem}
+.td-addr{max-width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-muted);font-size:.82rem}
+.td-acts{display:flex;gap:5px;align-items:center;flex-wrap:nowrap}
+.td-tel a{color:var(--navy-mid);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:4px}
+.td-tel a:hover{color:var(--gold)}
+
+.fsel{padding:.45rem 1rem;border:1px solid rgba(201,168,76,.3);background:#fff;font-family:'Cormorant Garamond',serif;font-size:.85rem;outline:none;cursor:pointer;color:#1a2744;-webkit-text-fill-color:#1a2744}
+
+.badge{display:inline-flex;align-items:center;gap:3px;padding:.2rem .65rem;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border-radius:2px;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
+.b-pending{background:var(--w-bg);color:var(--w-txt)}
+.b-validated{background:var(--s-bg);color:var(--s-txt)}
+.b-cancelled{background:var(--d-bg);color:var(--d-txt)}
+.b-delivered{background:var(--i-bg);color:var(--i-txt)}
+.b-stock{background:var(--s-bg);color:var(--s-txt)}
+.b-sold{background:var(--d-bg);color:var(--d-txt)}
+
+.ab{padding:.3rem .7rem;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid;cursor:pointer;background:none;font-family:'Cormorant Garamond',serif;transition:all .2s;white-space:nowrap;border-radius:2px;font-weight:600}
+.ab-val{border-color:#065f46;color:#065f46}.ab-val:hover{background:#065f46;color:#fff}
+.ab-ann{border-color:#991b1b;color:#991b1b}.ab-ann:hover{background:#991b1b;color:#fff}
+.ab-liv{border-color:#1e40af;color:#1e40af}.ab-liv:hover{background:#1e40af;color:#fff}
+.ab-gold{border-color:var(--gold);color:var(--navy)}.ab-gold:hover{background:var(--gold);color:var(--navy-deep)}
+.ab-red{border-color:#991b1b;color:#991b1b}.ab-red:hover{background:#991b1b;color:#fff}
+
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:1.25rem}
+.pcard{background:#fff;border:1px solid rgba(26,39,68,.1);padding:1.5rem;transition:all .25s;box-shadow:0 1px 8px rgba(26,39,68,.06)}
+.pcard:hover{border-color:rgba(201,168,76,.45);box-shadow:0 6px 24px rgba(26,39,68,.1)}
+.pcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem}
+.pcard-img{width:64px;height:64px;object-fit:cover;border:1px solid rgba(201,168,76,.2);flex-shrink:0}
+.pcard-ph{width:64px;height:64px;background:linear-gradient(135deg,#e8e0d5,#d4c9ba);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pcat{font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;background:rgba(201,168,76,.12);color:var(--navy-mid);padding:.2rem .6rem;border-radius:2px;font-weight:600}
+.pname{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--navy);margin-bottom:.2rem}
+.pid{font-size:.7rem;color:var(--text-muted);margin-bottom:.9rem}
+.pr-lbl{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.35rem}
+.price-row{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem}
+.price-inp{flex:1;padding:.55rem .75rem;border:1.5px solid rgba(201,168,76,.35);font-family:'Playfair Display',serif;font-size:1rem;outline:none;transition:border-color .2s}
+.price-inp:focus{border-color:var(--gold)}
+.price-da{font-size:.78rem;color:var(--text-muted)}
+.pcard-foot{display:flex;gap:.5rem;align-items:center;padding-top:1rem;border-top:1px solid rgba(26,39,68,.06);flex-wrap:wrap}
+
+.cmt-card{background:#fff;padding:1.5rem;margin-bottom:1rem;border-left:3px solid var(--gold);box-shadow:0 1px 8px rgba(26,39,68,.06)}
+.cmt-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem}
+.cmt-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--navy);font-weight:600}
+.cmt-email{font-size:.82rem;color:var(--text-muted)}
+.cmt-date{font-size:.75rem;color:var(--text-muted)}
+.cmt-msg{font-size:.95rem;color:#3a4a6a;line-height:1.75;font-style:italic;font-weight:300}
+
+.amodal-ov{display:none;position:fixed;inset:0;background:rgba(5,10,25,.87);z-index:8000;align-items:center;justify-content:center;padding:1rem}
+.amodal-ov.show{display:flex}
+.amodal{background:var(--cream);width:100%;max-width:480px;padding:2.5rem;border-top:3px solid var(--gold);box-shadow:0 30px 80px rgba(0,0,0,.4);animation:slideUp .35s cubic-bezier(.22,1,.36,1);max-height:90vh;overflow-y:auto}
+.amodal h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-style:italic;color:var(--navy);margin-bottom:1.5rem}
+.mfld{margin-bottom:1.2rem}
+.mfld label{display:block;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.4rem;font-weight:600}
+.mfld input,.mfld select{display:block;width:100%;padding:.8rem 1rem;border:1.5px solid rgba(26,39,68,.18);font-size:1rem;outline:none;transition:border-color .2s}
+.mfld input:focus,.mfld select:focus{border-color:var(--gold)}
+.upload-box{padding:1.5rem;border:2px dashed rgba(201,168,76,.35);text-align:center;cursor:pointer;transition:all .2s;font-size:.85rem;color:var(--text-muted);letter-spacing:.08em;margin-top:.5rem}
+.upload-box:hover{border-color:var(--gold);background:rgba(201,168,76,.04)}
+.img-preview{width:100%;max-height:180px;object-fit:cover;margin-top:.75rem;border:1px solid rgba(201,168,76,.2);display:none}
+.modal-btns{display:flex;gap:.75rem;margin-top:1.5rem;justify-content:flex-end}
+
+.empty{text-align:center;padding:3.5rem 2rem;color:var(--text-muted);border:1px dashed rgba(201,168,76,.2);background:#fff}
+.empty-ic{font-size:2.2rem;margin-bottom:.75rem;opacity:.4}
+
+/* Order detail modal */
+.order-detail-modal{display:none;position:fixed;inset:0;background:rgba(13,23,41,0.85);z-index:5000;align-items:center;justify-content:center;padding:1rem}
+.order-detail-modal.open{display:flex;animation:fadeIn 0.3s ease}
+.order-detail-box{background:var(--cream);max-width:560px;width:100%;padding:2.5rem;border-top:3px solid var(--gold);max-height:90vh;overflow-y:auto;position:relative}
+.order-detail-box h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-style:italic;color:var(--navy);margin-bottom:1.5rem}
+.detail-row{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid rgba(201,168,76,.12);font-size:.95rem}
+.detail-row:last-child{border:none}
+.detail-label{color:var(--text-muted);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
+.detail-value{font-weight:600;color:var(--navy);text-align:right;max-width:60%}
+.detail-total{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--gold);font-weight:700}
+
+/* Storage indicator */
+.storage-indicator{position:fixed;bottom:5rem;right:1.5rem;z-index:8999;background:rgba(13,23,41,0.85);border:1px solid rgba(201,168,76,0.3);border-radius:4px;padding:.35rem .75rem;font-family:'Cormorant Garamond',serif;font-size:.7rem;letter-spacing:.1em;color:rgba(201,168,76,.7);pointer-events:none;opacity:0;transition:opacity .5s}
+.storage-indicator.show{opacity:1}
+
+@media(max-width:768px){
+  .modal-grid,.contact-grid,.values-grid,.form-grid{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:1fr}.gallery-item{height:200px!important}.modal-img{height:250px}
+  nav{padding:0 1.25rem}.nav-links{display:none}
+  .section{padding:4rem 1.25rem}.shop-hero,.livraison-hero,.story-hero{padding:6rem 1.25rem 3rem}
+  .products-grid{grid-template-columns:repeat(2,1fr);gap:1rem}.product-card-img{height:200px}
+  .cart-drawer{width:100%;right:-100%}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .admin-content{padding:1rem}
+  .admin-topbar,.admin-tabs-bar{padding-left:1rem;padding-right:1rem}
+  .pgrid{grid-template-columns:1fr}
+  .lbox{padding:2rem 1.5rem}
+  .ph{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar" class="light">
+  <a class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="17" stroke="#c9a84c" stroke-width="1"/><path d="M18 6L20.5 13.5L28.5 13.5L22 18.5L24.5 26L18 21L11.5 26L14 18.5L7.5 13.5L15.5 13.5Z" fill="#c9a84c" opacity="0.9"/><circle cx="18" cy="18" r="3" fill="#1a2744"/></svg>
+    </div>
+    <span class="nav-brand">Lune D'Or</span>
+  </a>
+  <div class="nav-links">
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('shop')">Shop</a>
+    <a onclick="showPage('story')">Our Story</a>
+    <a onclick="showPage('contact')">Contact</a>
+  </div>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="toggleCart()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-bg"></div><div class="hero-pattern"></div><div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Maison de Parfumerie · Algérie</div>
+      <h1 class="hero-title pf">Lune<br><em>D'or</em></h1>
+      <div class="hero-divider"></div>
+      <p class="hero-subtitle">Découvrez l'art du parfum</p>
+      <button class="btn-primary" onclick="showPage('shop')">Explorer la Collection</button>
+    </div>
+  </section>
+  <section class="brand-section">
+    <div class="brand-inner">
+      <span class="brand-stars">✦ ✦ ✦</span>
+      <p class="brand-quote">"Chaque parfum raconte une histoire — la vôtre."</p>
+      <div class="gold-line center"></div>
+      <p class="brand-body">Née des sables dorés du désert algérien et de la tradition ancestrale de la parfumerie orientale, Lune D'Or crée des fragrances qui transcendent le temps. Chaque flacon est une invitation au voyage, un accord subtil entre les matières rares et l'artisanat d'exception.</p>
+    </div>
+  </section>
+  <section class="section" style="background:var(--cream)">
+    <div class="container">
+      <div class="text-center mb-4">
+        <div class="section-label">Sélection</div>
+        <h2 class="section-title">Pièces Signature</h2>
+        <div class="gold-line center"></div>
+      </div>
+      <div class="products-grid" id="featuredProducts"></div>
+      <div class="text-center mt-4">
+        <button class="btn-primary" onclick="showPage('shop')" style="opacity:1;animation:none">Voir Toute la Collection</button>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-logo">Lune D'Or</div>
+    <p class="footer-tagline">L'Art du Parfum · Algérie</p>
+    <div class="footer-links">
+      <a onclick="showPage('home')">Accueil</a>
+      <a onclick="showPage('shop')">Boutique</a>
+      <a onclick="showPage('story')">Notre Histoire</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+    <div class="footer-contact"><p>lunedor02026@gmail.com &nbsp;·&nbsp; +213 56 27 97 754</p></div>
+    <div class="social-row">
+      <a class="social-btn" href="https://www.instagram.com/lune.dor01" target="_blank" title="Instagram">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="#c9a84c"/></svg>
+      </a>
+      <a class="social-btn" href="https://www.tiktok.com/@cousmetique_lune_d1or" target="_blank" title="TikTok">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#c9a84c"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.78a4.85 4.85 0 01-1.01-.09z"/></svg>
+      </a>
+    </div>
+    <div class="footer-copy">© 2026 Lune D'Or. All rights reserved.</div>
+  </footer>
+</div>
+
+<!-- SHOP PAGE -->
+<div id="page-shop" class="page">
+  <div class="shop-hero">
+    <div class="section-label" style="color:var(--gold-pale)">Boutique</div>
+    <h1 class="pf" style="font-size:clamp(2.5rem,6vw,5rem);color:white;font-style:italic">Notre Collection</h1>
+    <div class="gold-line center"></div>
+  </div>
+  <section class="section" style="background:var(--cream)">
+    <div class="container">
+      <div class="filters" id="filters">
+        <button class="filter-btn active" onclick="filterProducts('all',this)">Tous</button>
+        <button class="filter-btn" onclick="filterProducts('homme',this)">Homme</button>
+        <button class="filter-btn" onclick="filterProducts('femme',this)">Femme</button>
+        <button class="filter-btn" onclick="filterProducts('shampooing',this)">Shampooing</button>
+        <button class="filter-btn" onclick="filterProducts('pack',this)">Pack</button>
+      </div>
+      <div class="products-grid" id="shopProducts"></div>
+    </div>
+  </section>
+  <footer style="background:var(--navy-deep);padding:2rem 2.5rem;text-align:center">
+    <div class="footer-copy" style="border:none">© 2026 Lune D'Or. All rights reserved.</div>
+  </footer>
+</div>
+
+<!-- LIVRAISON PAGE -->
+<div id="page-livraison" class="page">
+  <div class="livraison-hero">
+    <div class="section-label" style="color:var(--gold-pale)">Commande</div>
+    <h1 class="pf" style="color:white;font-size:clamp(2rem,5vw,4rem);font-style:italic">Demande de Livraison</h1>
+  </div>
+  <section class="form-section">
+    <div id="orderSummaryBox" class="order-summary" style="display:none">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:1rem;color:var(--gold)">Récapitulatif</h3>
+      <div class="summary-row"><span id="summaryProduct">—</span><span id="summarySubtotal">—</span></div>
+      <div class="summary-row"><span id="summaryDeliveryLabel">Livraison Domicile</span><span id="summaryDelivery">— DA</span></div>
+      <div class="summary-row total"><span>Total</span><span id="summaryTotal">—</span></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Nom Complet</label><input type="text" class="form-input" id="clientName" placeholder="Votre nom complet"></div>
+      <div class="form-group"><label class="form-label">Numéro de Téléphone</label><input type="tel" class="form-input" id="clientPhone" placeholder="+213 xxx xxx xxx"></div>
+      <div class="form-group"><label class="form-label">Wilaya</label><select class="form-select" id="wilayaSelect" onchange="updateDelivery()"><option value="">Sélectionner la wilaya</option></select></div>
+      <div class="form-group">
+        <label class="form-label">Type de Livraison</label>
+        <div class="delivery-type-row" id="deliveryTypeRow">
+          <button type="button" class="dtype-btn active" id="dtDomicile" onclick="setDeliveryType('domicile')">
+            <span class="dtype-icon">🏠</span>
+            <span class="dtype-label">À Domicile</span>
+            <span class="dtype-price" id="dtDomicilePrice">— DA</span>
+          </button>
+          <button type="button" class="dtype-btn" id="dtBureau" onclick="setDeliveryType('bureau')">
+            <span class="dtype-icon">🏢</span>
+            <span class="dtype-label">Stop Desk</span>
+            <span class="dtype-price" id="dtBureauPrice">— DA</span>
+          </button>
+        </div>
+      </div>
+      <!-- Cart summary (يظهر لما يجي من الكارت) -->
+<div class="form-group full" id="cartSummaryGroup" style="display:none">
+  <label class="form-label">Produits dans le panier</label>
+  <div class="cart-summary-box" id="cartSummaryInForm"></div>
+</div>
+<!-- Manual select (يظهر لما يجي مباشرة) -->
+<div class="form-group" id="manualProductGroup">
+  <label class="form-label">Produit</label>
+  <select class="form-select" id="productSelect" onchange="updateSummary()"><option value="">Sélectionner le produit</option></select>
+</div>
+<div class="form-group" id="manualQtyGroup">
+  <label class="form-label">Quantité</label>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <button class="qty-btn" onclick="changeQtyL(-1)">−</button>
+    <span class="qty-num" id="livrQty">1</span>
+    <button class="qty-btn" onclick="changeQtyL(1)">+</button>
+  </div>
+</div>
+      <div class="form-group full"><label class="form-label">Adresse Exacte</label><textarea class="form-textarea" id="clientAddress" placeholder="Rue, quartier, cité..."></textarea></div>
+      <div class="form-group full" style="text-align:right"><button class="btn-solid" onclick="submitOrder()" style="min-width:200px">Confirmer la Commande</button></div>
+    </div>
+  </section>
+  <footer style="background:var(--navy-deep);padding:2rem;text-align:center"><div class="footer-copy" style="border:none">© 2026 Lune D'Or.</div></footer>
+</div>
+
+<!-- STORY PAGE -->
+<div id="page-story" class="page">
+  <div class="story-hero">
+    <div class="story-pattern"></div>
+    <div style="position:relative">
+      <div class="section-label" style="color:var(--gold-pale)">À Propos</div>
+      <h1 class="pf" style="font-size:clamp(2.5rem,7vw,6rem);color:white;font-style:italic;line-height:1.05">Notre<br>Histoire</h1>
+      <div class="gold-line center"></div>
+      <p style="color:rgba(255,255,255,0.6);max-width:560px;margin:0 auto;font-size:1.05rem;font-weight:300;line-height:1.8">Une maison née de la passion, du désert, et du rêve d'une parfumerie algérienne d'exception.</p>
+    </div>
+  </div>
+  <section class="section" style="background:var(--cream)">
+    <div class="container">
+      <div style="max-width:720px;margin:0 auto;text-align:center">
+        <div class="section-label">Notre Philosophie</div>
+        <h2 class="section-title">L'Essence de Lune D'Or</h2>
+        <div class="gold-line center"></div>
+        <p style="font-size:1.1rem;line-height:1.9;color:var(--text-muted);font-weight:300;margin-bottom:1.5rem">Lune d'Or a été fondée avec l'ambition de célébrer, puisant son inspiration dans les marchés parfumés, les jardins de jasmin et les caravanes sillonnant le désert d'Erg Dahab. Chaque fragrance est un hommage à notre terre.</p>
+        <p style="font-size:1.05rem;line-height:1.9;color:var(--text-muted);font-weight:300">Nos parfumeurs sélectionnent à la main les matières premières les plus rares — oud du Moyen-Orient, rose de Taif, ambre gris et musc blanc — pour composer des accords qui restent gravés dans la mémoire.</p>
+      </div>
+      <div class="values-grid mt-4">
+        <div class="value-card"><div class="value-icon">⚗</div><h3 class="value-title">Crédibilité</h3><p class="value-text">Nous garantissons l'excellence avec des essences pures assurant une tenue longue durée. La qualité est notre signature : Votre confiance est notre priorité grâce à notre garantie de satisfaction totale.</p></div>
+        <div class="value-card"><div class="value-icon">✦</div><h3 class="value-title">Élégance</h3><p class="value-text">Un équilibre parfait entre l'opulence orientale et la sophistication contemporaine — pour ceux qui savent.</p></div>
+        <div class="value-card"><div class="value-icon">◈</div><h3 class="value-title">Authenticité</h3><p class="value-text">Nous refusons les compromis. Chaque ingrédient est tracé, chaque formule est unique, chaque parfum est une signature.</p></div>
+      </div>
+      <div class="gallery-grid mt-4">
+        <div class="gallery-item" style="overflow:hidden"><img src="https://scontent.cdninstagram.com/v/t1.15752-9/678807850_969723225566917_5390479105354954557_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=104&ccb=7-5&_nc_sid=fc17b8&efg=eyJxZV9ncm91cHMiOlsiaWdkX2Jlc3RfZWZmb3J0X2ltYWdlOnRlc3QiXX0%3D&_nc_ohc=smx0zVZLRQAQ7kNvwELzEvG&_nc_oc=Adp2T1HChQsr2LTliwANKTceuKCX5v7zM6MJY3quQjj1yJMz0AygmBctoXhHbvZHffBXr1YN6CVQe6oe1wpy0huM&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_ss=7a32e&oh=03_Q7cD5AFxezlB3hofzdrPWGkpbVZUw5xg0HUtERQ-0IQAhR82LA&oe=6A0F2886" style="width:100%;height:100%;object-fit:cover" alt="Lune D'Or"></div>
+        <div class="gallery-item" style="overflow:hidden"><img src="https://scontent.falg7-5.fna.fbcdn.net/v/t1.15752-9/672060413_1540947607651186_3390272638390808702_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=9f807c&_nc_ohc=8p6tgMEnj-gQ7kNvwGFEcwI&_nc_oc=AdoSp2JIEstVlG8hQZd9B1Mrt6B5xwlZRyKHbhOg1Ew8CItholHD7dmYNCvO3g-NMRA&_nc_zt=23&_nc_ht=scontent.falg7-5.fna&_nc_ss=7a2a8&oh=03_Q7cD5AEtkVk3RCHum1fVjl7Z42sL1_PwiFQ2h8E-QlFtZOdksQ&oe=6A0F3937" style="width:100%;height:100%;object-fit:cover" alt="Lune D'Or"></div>
+        <div class="gallery-item" style="overflow:hidden"><img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/674173691_3260343550840191_8875292260247358668_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=9f807c&_nc_ohc=4mKQz4HFbNEQ7kNvwF1h6zY&_nc_oc=AdoQXzSq6bURoNP10LHqZU5gORUqJykYRpHrHF1R5_msU0t3lWldrmnvGQpM6vZqymFTjXNx7R0nto9fhANJv74N&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&_nc_ss=7a32e&oh=03_Q7cD5AFW1y46-CG7jxGNvsrMw9YbhbskwRUKlAMttI7hqrvA-w&oe=6A0F29A4" style="width:100%;height:100%;object-fit:cover" alt="Lune D'Or"></div>
+        <div class="gallery-item" style="overflow:hidden"><img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/676500088_973426898575412_3235829031452869473_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=9f807c&_nc_ohc=U8kHDKhc6gsQ7kNvwET_HyL&_nc_oc=Adoy2jyJFyDp2H4DRup6elcO38C3TK6p8mfYApzm2ecIB3bJmSMRsJeZJUjPVjqAt4-kPEOxrRd-fEjbQ9qlhloZ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&_nc_ss=7a32e&oh=03_Q7cD5AGzPOYLthDTwzGXe9Tg1OBGAKsrAKZ_iyRM3iCX9nOFcg&oe=6A0F29B4" style="width:100%;height:100%;object-fit:cover" alt="Lune D'Or"></div>
+      </div>
+    </div>
+  </section>
+  <footer style="background:var(--navy-deep);padding:2rem;text-align:center"><div class="footer-copy" style="border:none">© 2026 Lune D'Or.</div></footer>
+</div>
+
+<!-- CONTACT PAGE -->
+<div id="page-contact" class="page">
+  <div class="livraison-hero">
+    <div class="section-label" style="color:var(--gold-pale)">Nous Joindre</div>
+    <h1 class="pf" style="color:white;font-size:clamp(2rem,5vw,4rem);font-style:italic">Contactez-Nous</h1>
+  </div>
+  <section class="section">
+    <div class="contact-grid container">
+      <div>
+        <div class="section-label">Message</div>
+        <h2 class="section-title" style="font-size:1.8rem">Envoyez-nous un message</h2>
+        <div class="gold-line"></div>
+        <div style="display:flex;flex-direction:column;gap:1.2rem;margin-top:1.5rem">
+          <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="contactName" placeholder="Votre nom"></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="contactEmail" placeholder="votre@email.com"></div>
+          <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" id="contactMsg" placeholder="Votre message..." style="min-height:130px"></textarea></div>
+          <button class="btn-solid" onclick="sendContact()" style="align-self:flex-start;min-width:160px">Envoyer</button>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Informations</div>
+        <h2 class="section-title" style="font-size:1.8rem">Où nous trouver</h2>
+        <div class="gold-line"></div>
+        <div class="info-cards mt-3">
+          <div class="info-card"><div class="info-card-icon">📍</div><div class="info-card-text"><h4>Localisation</h4><p>Algér dar el beida</p></div></div>
+          <div class="info-card"><div class="info-card-icon">🕐</div><div class="info-card-text"><h4>Horaires</h4><p>Dimanche–Jeudi, 9:00 AM – 8:00 PM</p></div></div>
+          <div class="info-card"><div class="info-card-icon">📞</div><div class="info-card-text"><h4>Téléphone</h4><p><a href="tel:+213562797754" style="color:var(--text-muted)">+213 562797754</a></p></div></div>
+          <div class="info-card"><div class="info-card-icon">✉</div><div class="info-card-text"><h4>Email</h4><p><a href="mailto:lunedor02026@gmail.com" style="color:var(--text-muted)">lunedor02026@gmail.com</a></p></div></div>
+        </div>
+        <a href="https://maps.app.goo.gl/uHuwiqcgK2i4Nnis8" target="_blank" class="map-embed">
+          <div style="text-align:center"><div style="font-size:1.8rem;margin-bottom:0.5rem">🗺</div><p style="font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--navy);font-family:'Cormorant Garamond',serif">Voir sur Google Maps</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+  <footer style="background:var(--navy-deep);padding:2rem;text-align:center"><div class="footer-copy" style="border:none">© 2026 Lune D'Or.</div></footer>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="page-admin" class="page">
+  <div class="admin-topbar">
+    <div class="tb-brand">
+      <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" stroke="#c9a84c" stroke-width="1" fill="none"/><path d="M16 5L18.5 12.5H26.5L20 17L22.5 24.5L16 20L9.5 24.5L12 17L5.5 12.5H13.5Z" fill="#c9a84c" opacity=".9"/></svg>
+      <div><span class="tb-name">Lune D'Or</span><span class="tb-tag">Admin</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <button class="back-btn" onclick="showPage('home')">← Site</button>
+      <span style="font-size:.73rem;color:rgba(255,255,255,.3)">alla@admin.com</span>
+      <button class="logout-btn" onclick="adminLogout()">Déconnexion</button>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-n" id="sTotal">0</div><div class="stat-l">Total Commandes</div></div>
+    <div class="stat"><div class="stat-n" id="sPend">0</div><div class="stat-l">En Attente</div></div>
+    <div class="stat"><div class="stat-n" id="sDeliv">0</div><div class="stat-l">Livrées</div></div>
+    <div class="stat"><div class="stat-n" id="sCA">0</div><div class="stat-l">CA Total (DA)</div></div>
+  </div>
+  <div class="admin-tabs-bar">
+    <button class="atab on" onclick="switchAdminTab('cmd',this)">Commandes<span class="tcnt" id="tCmdCnt"></span></button>
+    <button class="atab" onclick="switchAdminTab('prod',this)">Produits</button>
+    <button class="atab" onclick="switchAdminTab('cmt',this)">Commentaires<span class="tcnt" id="tCmtCnt"></span></button>
+  </div>
+  <div class="admin-content">
+    <div id="apanel-cmd" class="apanel on">
+      <div class="ph">
+        <div class="ph-l"><div class="sub" id="cmdSub">—</div><h2>Gestion des Commandes</h2></div>
+        <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
+          <select class="fsel" id="fltSt" onchange="renderCmd()">
+            <option value="all">Tous les statuts</option>
+            <option value="pending">En attente</option>
+            <option value="validated">Validées</option>
+            <option value="cancelled">Annulées</option>
+            <option value="delivered">Livrées</option>
+          </select>
+          <button class="ab ab-ann" onclick="clearOrders()" style="font-size:.65rem;padding:.35rem .8rem" title="Effacer toutes les commandes">🗑 Vider</button>
+        </div>
+      </div>
+      <div class="tw"><table class="atable">
+        <thead><tr><th>#</th><th>Client</th><th>Téléphone</th><th>Wilaya</th><th>Produit</th><th>Qté</th><th>Livraison</th><th>Total</th><th>Adresse</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
+        <tbody id="cmdBody"></tbody>
+      </table></div>
+    </div>
+    <div id="apanel-prod" class="apanel">
+      <div class="ph">
+        <div class="ph-l"><div class="sub" id="prodSub">—</div><h2>Gestion des Produits</h2></div>
+        <button class="ab ab-gold" onclick="openAddProd()" style="padding:.6rem 1.5rem;font-size:.8rem">+ Ajouter Produit</button>
+      </div>
+      <div class="pgrid" id="prodGrid"></div>
+    </div>
+    <div id="apanel-cmt" class="apanel">
+      <div class="ph">
+        <div class="ph-l"><div class="sub" id="cmtSub">—</div><h2>Commentaires Clients</h2></div>
+        <button class="ab ab-ann" onclick="clearMessages()" style="font-size:.65rem;padding:.35rem .8rem" title="Effacer tous les messages">🗑 Vider</button>
+      </div>
+      <div id="cmtList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="pmodal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-grid">
+      <div class="modal-img" id="modalImgContainer">
+        <svg width="60" height="90" viewBox="0 0 60 90" fill="none"><rect x="20" y="8" width="20" height="10" rx="2" fill="#c9a84c" opacity="0.5"/><rect x="10" y="18" width="40" height="64" rx="4" fill="#c9a84c" opacity="0.35"/><rect x="22" y="28" width="16" height="28" rx="1" fill="#c9a84c" opacity="0.55"/></svg>
+      </div>
+      <div class="modal-info">
+        <div class="section-label" id="modalCat">—</div>
+        <h2 class="pf" id="modalName" style="font-size:1.6rem;color:var(--navy);margin-bottom:0.5rem">—</h2>
+        <p class="pf" id="modalPrice" style="font-size:1.4rem;color:var(--gold);margin-bottom:1rem">—</p>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-num" id="modalQty">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <button class="btn-solid w-full" onclick="addToCart()" style="margin-bottom:0.75rem;text-align:center">Ajouter au Panier</button>
+        <button class="btn-primary w-full" onclick="shopNow()" style="opacity:1;animation:none;text-align:center">Commander Maintenant</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3 class="pf" style="font-size:1.2rem;color:var(--navy)">Panier</h3>
+    <button onclick="toggleCart()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--navy)">✕</button>
+  </div>
+  <div id="cartItems" style="flex:1;overflow-y:auto"></div>
+  <div class="cart-total-row">
+    <div class="cart-total-line"><span style="color:var(--text-muted)">Sous-total</span><span id="cartSubtotal">0 DA</span></div>
+    <div class="cart-total-line final"><span>Total</span><span id="cartTotal">0 DA</span></div>
+    <button class="btn-solid w-full mt-2" onclick="goToLivraison()">Confirmer la Commande →</button>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-check">
+    <svg width="36" height="36" viewBox="0 0 36 36"><polyline class="checkmark" points="6,18 15,27 30,9" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <h2 class="pf" style="color:white;font-size:2rem;font-style:italic;margin-bottom:1rem">Commande Confirmée</h2>
+  <p style="color:rgba(255,255,255,0.6);font-size:1.05rem;margin-bottom:2rem;font-weight:300">Merci pour votre confiance. Nous vous contacterons bientôt.</p>
+  <button class="btn-primary" style="opacity:1;animation:none" onclick="closeSuccess()">Retour à la Boutique</button>
+</div>
+
+<!-- ORDER DETAIL MODAL (FIX 2: shows full order details) -->
+<div class="order-detail-modal" id="orderDetailModal">
+  <div class="order-detail-box">
+    <button onclick="closeOrderDetail()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--navy)">✕</button>
+    <h3 id="detailTitle">Détail Commande</h3>
+    <div id="detailContent"></div>
+    <div style="margin-top:1.5rem;display:flex;gap:.75rem;justify-content:flex-end;flex-wrap:wrap" id="detailActions"></div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="adminLoginOv">
+  <div class="lbox">
+    <div class="lbox-logo">
+      <div class="lbox-star"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M13 2L15.5 9H23L17 13.5L19.5 20.5L13 16L6.5 20.5L9 13.5L3 9H10.5Z" fill="#c9a84c"/></svg></div>
+      <h2>Lune D'Or</h2><p class="sub">Espace Administration</p>
+    </div>
+    <div class="fld"><label for="lEmail">Adresse Email</label><input type="email" id="lEmail" placeholder="alla@admin.com" autocomplete="username"></div>
+    <div class="fld"><label for="lPass">Mot de Passe</label><input type="password" id="lPass" placeholder="••••••••••••" autocomplete="current-password"></div>
+    <div class="err-box" id="lErr">⚠ Email ou mot de passe incorrect.</div>
+    <button class="btn-login" onclick="doAdminLogin()">Se Connecter →</button>
+    <button class="btn-cancel-l" onclick="closeAdminLogin()">Annuler</button>
+  </div>
+</div>
+
+<!-- ADMIN PRODUCT MODAL -->
+<div class="amodal-ov" id="prodModal">
+  <div class="amodal">
+    <h3 id="mTitle">Ajouter un Produit</h3>
+    <input type="hidden" id="mEditId">
+    <div class="mfld"><label>Nom du Produit</label><input type="text" id="mName" placeholder="ex: Oud Majesty"></div>
+    <div class="mfld"><label>Prix (DA)</label><input type="number" id="mPrice" placeholder="ex: 3200" min="0" step="50"></div>
+    <div class="mfld"><label>Catégorie</label>
+      <select id="mCat"><option value="tous">tous</option><option value="homme">Homme</option><option value="femme">Femme</option><option value="shampooing">Shampooing</option><option value="pack">pack</option></select>
+    </div>
+    <div class="mfld">
+      <label>Photo du Produit</label>
+      <div class="upload-box" onclick="document.getElementById('mImgFile').click()">📷 &nbsp; Cliquez pour choisir une photo</div>
+      <input type="file" id="mImgFile" accept="image/*" style="display:none" onchange="previewImg(this)">
+      <img id="mImgPrev" class="img-preview" alt="">
+    </div>
+    <div class="modal-btns">
+      <button class="ab ab-ann" onclick="closeProdModal()">Annuler</button>
+      <button class="ab ab-gold" onclick="saveProd()" style="padding:.5rem 1.5rem">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Storage indicator -->
+<div class="storage-indicator" id="storageIndicator">💾 Sauvegardé</div>
+
+<!-- LOCK BTN -->
+<button id="globalLockBtn" onclick="openAdminLogin()" title="Accès Admin" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:9000;width:54px;height:54px;border-radius:50%;background:var(--navy-deep);border:1.5px solid rgba(201,168,76,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;box-shadow:0 4px 20px rgba(0,0,0,.4);">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+</button>
+
+<script>
+// ══════════════════════════════════════════════
+// LOCALSTORAGE LAYER
+// ══════════════════════════════════════════════
+var LS_PRODUCTS = 'lunedor_products';
+var LS_ORDERS   = 'lunedor_orders';
+var LS_MESSAGES = 'lunedor_messages';
+var LS_ORDER_ID = 'lunedor_next_order_id';
+
+var DEFAULT_PRODUCTS = [
+  {id:1,name:'Oud Majesty',price:3200,category:'homme',sold_out:false,img:''},
+  {id:2,name:'Black Amber',price:2800,category:'homme',sold_out:false,img:''},
+  {id:3,name:'Desert King',price:3500,category:'homme',sold_out:false,img:''},
+  {id:4,name:'Sultan Noir',price:2600,category:'homme',sold_out:true,img:''},
+  {id:5,name:'Rose Éternelle',price:2900,category:'femme',sold_out:false,img:''},
+  {id:6,name:'Jasmin Doré',price:2500,category:'femme',sold_out:false,img:''},
+  {id:7,name:'Lune Blanche',price:3100,category:'femme',sold_out:false,img:''},
+  {id:8,name:'Velours Rose',price:2700,category:'femme',sold_out:true,img:''},
+];
+
+var DEFAULT_ORDERS = [
+  {id:1,name:'Amira Benali',phone:'0793305740',wilaya:'16 - Alger',product:'Oud Majesty',qty:2,unit:3200,delivery:400,deliveryType:'Domicile',total:6800,address:'Cité 400 logts, Bab Ezzouar, Alger',date:'10/07 14:32',status:'pending'},
+  {id:2,name:'Yacine Boudiaf',phone:'0661234567',wilaya:'25 - Constantine',product:'Rose Éternelle',qty:1,unit:2900,delivery:400,deliveryType:'Domicile',total:3300,address:'Rue Didouche Mourad, Centre-Ville',date:'11/07 09:15',status:'validated'},
+  {id:3,name:'Sabrina Khelil',phone:'0770998877',wilaya:'31 - Oran',product:'Jasmin Doré',qty:3,unit:2500,delivery:400,deliveryType:'Stop Desk',total:7900,address:'Hai El Yasmine, Bir El Djir',date:'11/07 11:50',status:'pending'},
+  {id:4,name:'Fouad Messaoudi',phone:'0555441122',wilaya:'07 - Biskra',product:'Desert King',qty:1,unit:3500,delivery:600,deliveryType:'Domicile',total:4100,address:'Avenue de la République, Biskra',date:'12/07 08:00',status:'delivered'},
+  {id:5,name:'Nadia Ziani',phone:'0698776655',wilaya:'15 - Tizi Ouzou',product:'Lune Blanche',qty:2,unit:3100,delivery:400,deliveryType:'Domicile',total:6600,address:'Village Aït Yahia, Chemini',date:'12/07 16:22',status:'cancelled'},
+];
+
+var DEFAULT_MESSAGES = [
+  {id:1,name:'Sarah M.',email:'sarah@gmail.com',message:"Les parfums sont vraiment magnifiques ! J'ai reçu Jasmin Doré et le packaging est tellement luxueux.",date:'09/07 18:44'},
+  {id:2,name:'Karim B.',email:'karim.b@hotmail.fr',message:'Service rapide et produit conforme. Je recommande Oud Majesty pour les amateurs de parfums orientaux.',date:'10/07 12:30'},
+  {id:3,name:'Lynda O.',email:'lynda.o@gmail.com',message:"Lune Blanche est envoûtant, je suis conquise. Livraison rapide à Alger, emballage soigné. Bravo !",date:'11/07 20:15'},
+];
+
+function lsLoad(key, fallback) {
+  try {
+    var raw = localStorage.getItem(key);
+    if (raw === null) return JSON.parse(JSON.stringify(fallback));
+    return JSON.parse(raw);
+  } catch(e) { return JSON.parse(JSON.stringify(fallback)); }
+}
+
+var saveIndicatorTimer = null;
+function lsSave(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+    flashSaveIndicator();
+  } catch(e) { console.warn('localStorage save failed:', e); }
+}
+function flashSaveIndicator() {
+  var el = document.getElementById('storageIndicator');
+  el.classList.add('show');
+  if (saveIndicatorTimer) clearTimeout(saveIndicatorTimer);
+  saveIndicatorTimer = setTimeout(function(){ el.classList.remove('show'); }, 1800);
+}
+
+var PRODUCTS = lsLoad(LS_PRODUCTS, DEFAULT_PRODUCTS);
+var orders   = lsLoad(LS_ORDERS, DEFAULT_ORDERS);
+var messages = lsLoad(LS_MESSAGES, DEFAULT_MESSAGES);
+var nextOrderId = parseInt(localStorage.getItem(LS_ORDER_ID) || '0') || (orders.length > 0 ? Math.max.apply(null, orders.map(function(o){return o.id;})) + 1 : 1);
+
+if (localStorage.getItem(LS_PRODUCTS) === null) lsSave(LS_PRODUCTS, PRODUCTS);
+if (localStorage.getItem(LS_ORDERS)   === null) lsSave(LS_ORDERS, orders);
+if (localStorage.getItem(LS_MESSAGES) === null) lsSave(LS_MESSAGES, messages);
+
+function saveProducts() { lsSave(LS_PRODUCTS, PRODUCTS); }
+function saveOrders()   { lsSave(LS_ORDERS, orders); }
+function saveMessages() { lsSave(LS_MESSAGES, messages); }
+function saveNextId()   { try{ localStorage.setItem(LS_ORDER_ID, String(nextOrderId)); } catch(e){} }
+
+function clearOrders() {
+  if (!confirm('Effacer TOUTES les commandes ? Action irréversible.')) return;
+  orders = []; nextOrderId = 1;
+  saveOrders(); saveNextId();
+  renderAdminAll();
+  showToast('Commandes effacées', 't-err');
+}
+function clearMessages() {
+  if (!confirm('Effacer TOUS les messages ? Action irréversible.')) return;
+  messages = [];
+  saveMessages();
+  renderAdminAll();
+  showToast('Messages effacés', 't-err');
+}
+
+// ══════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════
+var WILAYAS = [
+  '01 - Adrar','02 - Chlef','03 - Laghouat','04 - Oum El Bouaghi','05 - Batna',
+  '06 - Béjaïa','07 - Biskra','08 - Béchar','09 - Blida','10 - Bouira',
+  '11 - Tamanrasset','12 - Tébessa','13 - Tlemcen','14 - Tiaret','15 - Tizi Ouzou',
+  '16 - Alger','17 - Djelfa','18 - Jijel','19 - Sétif','20 - Saïda',
+  '21 - Skikda','22 - Sidi Bel Abbès','23 - Annaba','24 - Guelma','25 - Constantine',
+  '26 - Médéa','27 - Mostaganem',"28 - M'Sila",'29 - Mascara','30 - Ouargla',
+  '31 - Oran','32 - El Bayadh','33 - Illizi','34 - Bordj Bou Arréridj','35 - Boumerdès',
+  '36 - El Tarf','37 - Tindouf','38 - Tissemsilt','39 - El Oued','40 - Khenchela',
+  '41 - Souk Ahras','42 - Tipaza','43 - Mila','44 - Aïn Defla','45 - Naâma',
+  '46 - Aïn Témouchent','47 - Ghardaïa','48 - Relizane','49 - Timimoun','50 - Bordj Badji Mokhtar',
+  '51 - Ouled Djellal','52 - Béni Abbès','53 - In Salah','54 - In Guezzam','55 - Touggourt',
+  "56 - Djanet","57 - El M'Ghaïer",'58 - El Meniaa'
+];
+
+var YALIDINE_ZONES = {
+  0: [500, 300], 1: [750, 350], 2: [900, 400],
+  3: [1050, 600], 4: [1400, 800], 5: [1600, 1000]
+};
+var WILAYA_ZONE = {
+  1:4, 2:1, 3:3, 4:1, 5:2, 6:2, 7:3, 8:4, 9:2, 10:2,
+  11:4, 12:2, 13:2, 14:2, 15:2, 16:1, 17:3, 18:2, 19:2, 20:2,
+  21:1, 22:2, 23:2, 24:1, 25:0, 26:2, 27:2, 28:2, 29:2, 30:3,
+  31:2, 32:3, 33:3, 34:2, 35:2, 36:2, 37:3, 38:2, 39:3, 40:2,
+  41:2, 42:2, 43:1, 44:2, 45:4, 46:2, 47:3, 48:2, 49:4, 50:4,
+  51:3, 52:4, 53:4, 54:4, 55:3, 56:4, 57:3, 58:3
+};
+
+function getDeliveryPrice(wilayaVal, type) {
+  var num = parseInt((wilayaVal || '').split(' ')[0]);
+  var zone = WILAYA_ZONE[num];
+  if (zone === undefined) zone = 2;
+  var tarifs = YALIDINE_ZONES[zone] || YALIDINE_ZONES[2];
+  return type === 'bureau' ? tarifs[1] : tarifs[0];
+}
+
+var deliveryType = 'domicile';
+function setDeliveryType(type) {
+  deliveryType = type;
+  document.getElementById('dtDomicile').classList.toggle('active', type === 'domicile');
+  document.getElementById('dtBureau').classList.toggle('active', type === 'bureau');
+  updateSummary();
+}
+
+var cart = [];
+var currentProduct = null;
+var modalQty = 1;
+var livrQty = 1;
+var pendingImg = '';
+
+// ══════════════════════════════════════════════
+// PAGE ROUTING
+// ══════════════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  var p = document.getElementById('page-' + name);
+  if (p) { p.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+  var nav = document.getElementById('navbar');
+  var isHome  = name === 'home';
+  var isAdmin = name === 'admin';
+  nav.style.display = isAdmin ? 'none' : '';
+  document.getElementById('globalLockBtn').style.display = isAdmin ? 'none' : '';
+  nav.classList.toggle('light', isHome);
+  nav.classList.toggle('scrolled', !isHome && !isAdmin);
+  if (name === 'home')      renderFeatured();
+  if (name === 'shop')      renderShop('all');
+  if (name === 'livraison') initLivraison();
+  if (name === 'admin')     renderAdminAll();
+}
+
+window.addEventListener('scroll', function(){
+  var nav = document.getElementById('navbar');
+  if (document.getElementById('page-home').classList.contains('active')){
+    if (window.scrollY > 60){ nav.classList.remove('light'); nav.classList.add('scrolled'); }
+    else { nav.classList.add('light'); nav.classList.remove('scrolled'); }
+  }
+});
+
+// ══════════════════════════════════════════════
+// SVG HELPERS
+// ══════════════════════════════════════════════
+function perfumeSVG(size, color) {
+  size = size || 1; color = color || '#c9a84c';
+  return '<svg width="'+(48*size)+'" height="'+(72*size)+'" viewBox="0 0 48 72" fill="none">'
+    +'<rect x="'+(16*size)+'" y="'+(6*size)+'" width="'+(16*size)+'" height="'+(10*size)+'" rx="2" fill="'+color+'" opacity="0.45"/>'
+    +'<rect x="'+(10*size)+'" y="'+(16*size)+'" width="'+(28*size)+'" height="'+(50*size)+'" rx="3" fill="'+color+'" opacity="0.3"/>'
+    +'<rect x="'+(18*size)+'" y="'+(24*size)+'" width="'+(12*size)+'" height="'+(24*size)+'" rx="1" fill="'+color+'" opacity="0.55"/>'
+    +'<ellipse cx="'+(24*size)+'" cy="'+(14*size)+'" rx="'+(4*size)+'" ry="'+(3*size)+'" fill="'+color+'" opacity="0.6"/>'
+    +'</svg>';
+}
+function perfSvgAdmin(cat) {
+  var c = cat==='femme' ? '#c8a4b8' : cat==='shampooing' ? '#a4b8c8' : '#c4b08a';
+  return '<svg width="30" height="44" viewBox="0 0 30 44" fill="none">'
+    +'<rect x="10" y="2" width="10" height="6" rx="1" fill="'+c+'" opacity=".65"/>'
+    +'<rect x="4" y="8" width="22" height="34" rx="2" fill="'+c+'" opacity=".4"/>'
+    +'<rect x="11" y="14" width="8" height="16" rx="1" fill="'+c+'" opacity=".7"/>'
+    +'</svg>';
+}
+
+// ══════════════════════════════════════════════
+// SHOP RENDER
+// ══════════════════════════════════════════════
+function renderFeatured() {
+  document.getElementById('featuredProducts').innerHTML = PRODUCTS.slice(0,3).map(cardHTML).join('');
+}
+function renderShop(cat) {
+  var filtered = (cat === 'all') ? PRODUCTS : PRODUCTS.filter(function(p){ return p.category === cat; });
+  document.getElementById('shopProducts').innerHTML = filtered.map(cardHTML).join('');
+}
+function cardHTML(p) {
+  var imgHtml = p.img
+    ? '<img src="'+p.img+'" style="width:100%;height:100%;object-fit:cover" alt="'+p.name+'">'
+    : '<div class="perfume-icon">'+perfumeSVG(1.4)+'</div>';
+  var shopBtn = p.sold_out
+    ? '<button class="btn-solid" style="font-size:0.78rem;padding:0.6rem 1.2rem;opacity:0.45;cursor:not-allowed;background:#888;border-color:#888" disabled>Épuisé</button>'
+    : '<button class="btn-solid" style="font-size:0.78rem;padding:0.6rem 1.2rem" onclick="openProduct('+p.id+')">Shop Now</button>';
+  var soldBadge = p.sold_out
+    ? '<div class="sold-badge" style="background:#c0392b;color:#fff;font-weight:700;font-size:0.7rem;letter-spacing:0.12em">⊘ ÉPUISÉ</div>'
+    : '';
+  return '<div class="product-card" style="'+(p.sold_out?'cursor:default':'cursor:pointer')+'" '+(p.sold_out?'':' onclick="openProduct('+p.id+')"')+'>'
+    +soldBadge
+    +'<div class="product-card-img" style="'+(p.sold_out?'filter:grayscale(40%) opacity(0.8)':'')+'">'+imgHtml+'</div>'
+    +'<div class="product-card-body">'
+    +'<div class="product-cat">'+p.category+'</div>'
+    +'<h3 class="product-name">'+p.name+'</h3>'
+    +'<p class="product-price">'+p.price.toLocaleString()+' DA</p>'
+    +shopBtn
+    +'</div></div>';
+}
+function filterProducts(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderShop(cat);
+}
+
+// ══════════════════════════════════════════════
+// PRODUCT MODAL
+// ══════════════════════════════════════════════
+function openProduct(id) {
+  currentProduct = PRODUCTS.find(function(p){ return p.id === id; });
+  if (!currentProduct || currentProduct.sold_out) return;
+  modalQty = 1;
+  document.getElementById('modalName').textContent  = currentProduct.name;
+  document.getElementById('modalCat').textContent   = currentProduct.category;
+  document.getElementById('modalPrice').textContent = currentProduct.price.toLocaleString() + ' DA';
+  document.getElementById('modalQty').textContent   = 1;
+  var modalImg = document.getElementById('modalImgContainer');
+  if (currentProduct.img) {
+    modalImg.innerHTML = '<img src="'+currentProduct.img+'" style="width:100%;height:100%;object-fit:cover" alt="'+currentProduct.name+'">';
+  } else {
+    modalImg.innerHTML = '<svg width="60" height="90" viewBox="0 0 60 90" fill="none"><rect x="20" y="8" width="20" height="10" rx="2" fill="#c9a84c" opacity="0.5"/><rect x="10" y="18" width="40" height="64" rx="4" fill="#c9a84c" opacity="0.35"/><rect x="22" y="28" width="16" height="28" rx="1" fill="#c9a84c" opacity="0.55"/></svg>';
+  }
+  document.getElementById('productModal').classList.add('open');
+}
+function closeModal() { document.getElementById('productModal').classList.remove('open'); }
+function changeQty(d) {
+  modalQty = Math.max(1, modalQty + d);
+  document.getElementById('modalQty').textContent = modalQty;
+}
+
+// ══════════════════════════════════════════════
+// CART
+// ══════════════════════════════════════════════
+function addToCart() {
+  if (!currentProduct || currentProduct.sold_out) { showToast('Ce produit est épuisé'); return; }
+  var existing = cart.find(function(i){ return i.id === currentProduct.id; });
+  if (existing) existing.qty += modalQty;
+  else cart.push({id:currentProduct.id,name:currentProduct.name,price:currentProduct.price,qty:modalQty});
+  updateCartBadge();
+  closeModal();
+  showToast('Ajouté au panier ✓', 'gold-toast');
+}
+function updateCartBadge() {
+  document.getElementById('cartBadge').textContent = cart.reduce(function(s,i){ return s+i.qty; }, 0);
+}
+function toggleCart() {
+  document.getElementById('cartDrawer').classList.toggle('open');
+  document.getElementById('cartOverlay').classList.toggle('open');
+  renderCart();
+}
+function renderCart() {
+  var items = document.getElementById('cartItems');
+  if (!cart.length) {
+    items.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.95rem">Votre panier est vide.</p>';
+    document.getElementById('cartSubtotal').textContent = '0 DA';
+    document.getElementById('cartTotal').textContent = '0 DA';
+    return;
+  }
+  items.innerHTML = cart.map(function(i){
+    return '<div class="cart-item">'
+      +'<div class="cart-item-img">'+perfumeSVG(0.65)+'</div>'
+      +'<div style="flex:1">'
+      +'<p style="font-family:\'Playfair Display\',serif;font-size:0.95rem;color:var(--navy);margin-bottom:0.25rem">'+i.name+'</p>'
+      +'<p style="font-size:0.8rem;color:var(--text-muted)">'+i.qty+' × '+i.price.toLocaleString()+' DA</p>'
+      +'<p style="font-family:\'Playfair Display\',serif;color:var(--gold);font-size:0.95rem;margin-top:0.25rem">'+(i.qty*i.price).toLocaleString()+' DA</p>'
+      +'</div>'
+      +'<button onclick="removeFromCart('+i.id+')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:1.2rem;align-self:flex-start">×</button>'
+      +'</div>';
+  }).join('');
+  var sub = cart.reduce(function(s,i){ return s+i.qty*i.price; }, 0);
+  document.getElementById('cartSubtotal').textContent = sub.toLocaleString() + ' DA';
+  document.getElementById('cartTotal').textContent    = sub.toLocaleString() + ' DA';
+}
+function removeFromCart(id) {
+  cart = cart.filter(function(i){ return i.id !== id; });
+  updateCartBadge(); renderCart();
+}
+function goToLivraison() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+  showPage('livraison');
+}
+function shopNow() { closeModal(); showPage('livraison'); }
+
+// ══════════════════════════════════════════════
+// LIVRAISON — FIX 1: Always rebuild product list from PRODUCTS array
+// ══════════════════════════════════════════════
+function initLivraison() {
+  var ws = document.getElementById('wilayaSelect');
+  var prevWilaya = ws.value;
+  ws.innerHTML = '<option value="">Sélectionner la wilaya</option>';
+  WILAYAS.forEach(function(w){
+    var opt = document.createElement('option'); opt.value = w; opt.textContent = w; ws.appendChild(opt);
+  });
+  if (prevWilaya) ws.value = prevWilaya;
+
+  var cartGroup  = document.getElementById('cartSummaryGroup');
+  var manualProd = document.getElementById('manualProductGroup');
+  var manualQty  = document.getElementById('manualQtyGroup');
+
+  if (cart.length > 0) {
+    cartGroup.style.display  = 'flex';
+    manualProd.style.display = 'none';
+    manualQty.style.display  = 'none';
+    document.getElementById('cartSummaryInForm').innerHTML = cart.map(function(i){
+      return '<div class="cart-summary-item"><span>'+i.name+' <span style="color:var(--text-muted)">× '+i.qty+'</span></span><strong>'+(i.price*i.qty).toLocaleString()+' DA</strong></div>';
+    }).join('');
+  } else {
+    cartGroup.style.display  = 'none';
+    manualProd.style.display = 'flex';
+    manualQty.style.display  = 'flex';
+    var ps = document.getElementById('productSelect');
+    ps.innerHTML = '<option value="">Sélectionner le produit</option>';
+    PRODUCTS.filter(function(p){ return !p.sold_out; }).forEach(function(p){
+      var opt = document.createElement('option');
+      opt.value = String(p.id); opt.textContent = p.name + ' — ' + p.price.toLocaleString() + ' DA';
+      ps.appendChild(opt);
+    });
+    livrQty = 1; document.getElementById('livrQty').textContent = 1;
+  }
+  deliveryType = 'domicile';
+  document.getElementById('dtDomicile').classList.add('active');
+  document.getElementById('dtBureau').classList.remove('active');
+  updateSummary();
+}
+
+function changeQtyL(d) {
+  livrQty = Math.max(1, livrQty + d);
+  document.getElementById('livrQty').textContent = livrQty;
+  updateSummary();
+}
+function updateDelivery() { updateSummary(); }
+function updateSummary() {
+  var pidStr    = document.getElementById('productSelect').value;
+  var prod      = PRODUCTS.find(function(p){ return String(p.id) === pidStr; });
+  var wilayaVal = document.getElementById('wilayaSelect').value;
+
+  var pDom = getDeliveryPrice(wilayaVal, 'domicile');
+  var pBur = getDeliveryPrice(wilayaVal, 'bureau');
+  document.getElementById('dtDomicilePrice').textContent = wilayaVal ? pDom.toLocaleString() + ' DA' : '— DA';
+  document.getElementById('dtBureauPrice').textContent   = wilayaVal ? pBur.toLocaleString() + ' DA' : '— DA';
+
+  var delivery = deliveryType === 'bureau' ? pBur : pDom;
+  var box = document.getElementById('orderSummaryBox');
+  if (prod && wilayaVal) {
+    box.style.display = 'block';
+    var sub   = prod.price * livrQty;
+    var total = sub + delivery;
+    document.getElementById('summaryProduct').textContent       = prod.name + ' ×' + livrQty;
+    document.getElementById('summarySubtotal').textContent      = sub.toLocaleString() + ' DA';
+    document.getElementById('summaryDeliveryLabel').textContent = deliveryType === 'bureau' ? 'Livraison Stop Desk' : 'Livraison Domicile';
+    document.getElementById('summaryDelivery').textContent      = delivery.toLocaleString() + ' DA';
+    document.getElementById('summaryTotal').textContent         = total.toLocaleString() + ' DA';
+  } else { box.style.display = 'none'; }
+}
+function submitOrder() {
+  var name    = document.getElementById('clientName').value.trim();
+  var phone   = document.getElementById('clientPhone').value.trim();
+  var wilaya  = document.getElementById('wilayaSelect').value;
+  var address = document.getElementById('clientAddress').value.trim();
+  if (!name || !phone || !wilaya || !address) { showToast('Veuillez remplir tous les champs'); return; }
+
+  var delivery = getDeliveryPrice(wilaya, deliveryType);
+  var now = new Date();
+  var dateStr = now.getDate().toString().padStart(2,'0') + '/' + (now.getMonth()+1).toString().padStart(2,'0')
+              + ' ' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+  // items — من الكارت أو من السيليكت اليدوي
+  var items = [];
+  if (cart.length > 0) {
+    items = cart.map(function(ci){ return {id:ci.id, name:ci.name, price:ci.price, qty:ci.qty}; });
+  } else {
+    var pidStr = document.getElementById('productSelect').value;
+    if (!pidStr) { showToast('Veuillez sélectionner un produit'); return; }
+    var prod = PRODUCTS.find(function(p){ return String(p.id) === pidStr; });
+    if (!prod) return;
+    items = [{id:prod.id, name:prod.name, price:prod.price, qty:livrQty}];
+  }
+
+  var subtotal = items.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
+  var total    = subtotal + delivery;
+  var totalQty = items.reduce(function(s,i){ return s + i.qty; }, 0);
+  var productLabel = items.map(function(i){ return i.name + ' x' + i.qty; }).join(' | ');
+
+  orders.push({
+    id: nextOrderId++,
+    name: name, phone: phone, wilaya: wilaya, address: address,
+    items: items,
+    product: productLabel,
+    qty: totalQty,
+    unit: items.length === 1 ? items[0].price : 0,
+    deliveryType: deliveryType === 'bureau' ? 'Stop Desk' : 'Domicile',
+    delivery: delivery, total: total, status: 'pending', date: dateStr
+  });
+  saveOrders(); saveNextId();
+  cart = []; updateCartBadge();
+  document.getElementById('clientName').value = '';
+  document.getElementById('clientPhone').value = '';
+  document.getElementById('clientAddress').value = '';
+  document.getElementById('successOverlay').classList.add('open');
+}
+function closeSuccess() {
+  document.getElementById('successOverlay').classList.remove('open');
+  showPage('shop');
+}
+
+// ══════════════════════════════════════════════
+// CONTACT
+// ══════════════════════════════════════════════
+function sendContact() {
+  var name  = document.getElementById('contactName').value.trim();
+  var email = document.getElementById('contactEmail').value.trim();
+  var msg   = document.getElementById('contactMsg').value.trim();
+  if (!name || !email || !msg) { showToast('Veuillez remplir tous les champs'); return; }
+  var now     = new Date();
+  var dateStr = now.getDate().toString().padStart(2,'0') + '/' + (now.getMonth()+1).toString().padStart(2,'0')
+              + ' ' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  messages.unshift({id: Date.now(), name: name, email: email, message: msg, date: dateStr});
+  saveMessages();
+  document.getElementById('contactName').value = '';
+  document.getElementById('contactEmail').value = '';
+  document.getElementById('contactMsg').value = '';
+  showToast('Message envoyé avec succès ✓', 'gold-toast');
+}
+
+// ══════════════════════════════════════════════
+// ADMIN AUTH
+// ══════════════════════════════════════════════
+function openAdminLogin() {
+  document.getElementById('adminLoginOv').classList.add('show');
+  setTimeout(function(){ document.getElementById('lEmail').focus(); }, 300);
+}
+function closeAdminLogin() {
+  document.getElementById('adminLoginOv').classList.remove('show');
+  document.getElementById('lErr').style.display = 'none';
+  document.getElementById('lEmail').value = '';
+  document.getElementById('lPass').value = '';
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' && document.getElementById('adminLoginOv').classList.contains('show')) doAdminLogin();
+});
+function doAdminLogin() {
+  var e = document.getElementById('lEmail').value.trim();
+  var p = document.getElementById('lPass').value;
+  var err = document.getElementById('lErr');
+  if (e === 'alla@admin.com' && p === 'allamalikanis#@2006') {
+    err.style.display = 'none';
+    closeAdminLogin();
+    showPage('admin');
+    showToast('Bienvenue Alla ✦', 't-gold');
+  } else {
+    err.style.display = 'block';
+    document.getElementById('lPass').value = '';
+    var b = document.querySelector('.lbox');
+    b.style.animation = 'none'; void b.offsetWidth; b.style.animation = 'shk .4s ease';
+  }
+}
+function adminLogout() { showPage('home'); showToast('Déconnecté', 't-ok'); }
+
+var shStyle = document.createElement('style');
+shStyle.textContent = '@keyframes shk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}';
+document.head.appendChild(shStyle);
+
+// ══════════════════════════════════════════════
+// ADMIN TABS
+// ══════════════════════════════════════════════
+function switchAdminTab(name, btn) {
+  document.querySelectorAll('.atab').forEach(function(t){ t.classList.remove('on'); });
+  document.querySelectorAll('.apanel').forEach(function(p){ p.classList.remove('on'); });
+  btn.classList.add('on');
+  document.getElementById('apanel-' + name).classList.add('on');
+}
+
+// ══════════════════════════════════════════════
+// ADMIN RENDER
+// ══════════════════════════════════════════════
+function renderAdminAll() { renderAdminStats(); renderCmd(); renderProd(); renderCmt(); }
+
+function renderAdminStats() {
+  var pnd = orders.filter(function(o){ return o.status === 'pending'; }).length;
+  var dlv = orders.filter(function(o){ return o.status === 'delivered'; }).length;
+  var ca  = orders.filter(function(o){ return o.status !== 'cancelled'; }).reduce(function(s,o){ return s+o.total; }, 0);
+  document.getElementById('sTotal').textContent = orders.length;
+  document.getElementById('sPend').textContent  = pnd;
+  document.getElementById('sDeliv').textContent = dlv;
+  document.getElementById('sCA').textContent    = ca.toLocaleString();
+  var tc = document.getElementById('tCmdCnt');
+  tc.textContent = pnd || ''; tc.style.display = pnd ? 'inline' : 'none';
+  var cc = document.getElementById('tCmtCnt');
+  cc.textContent = messages.length || ''; cc.style.display = messages.length ? 'inline' : 'none';
+}
+
+var slbl = {pending:'En attente', validated:'Validée', cancelled:'Annulée', delivered:'Livrée'};
+
+// FIX 2: Each order is its own row, with full product info visible + delete button always present
+function renderOrderItems(o) {
+  if (o.items && o.items.length > 0) {
+    return o.items.map(function(i){
+      return '<span style="display:block;white-space:nowrap;font-size:.81rem">'+i.name+' <b style="color:var(--gold)">×'+i.qty+'</b></span>';
+    }).join('');
+  }
+  return '<span style="font-size:.81rem">'+o.product+'</span>';
+}
+function renderOrderItemsDetail(o) {
+  if (o.items && o.items.length > 0) {
+    return o.items.map(function(i){
+      return i.name+' × '+i.qty+' = '+(i.price*i.qty).toLocaleString()+' DA';
+    }).join('<br>');
+  }
+  return o.product;
+}
+function renderCmd() {
+  var f    = document.getElementById('fltSt').value;
+  var list = f === 'all' ? orders : orders.filter(function(o){ return o.status === f; });
+  // Sort by id descending (newest first)
+  list = list.slice().sort(function(a,b){ return b.id - a.id; });
+  document.getElementById('cmdSub').textContent = list.length + ' commande(s)';
+  var body = document.getElementById('cmdBody');
+  if (!list.length) {
+    body.innerHTML = '<tr><td colspan="12"><div class="empty"><div class="empty-ic">📦</div><p>Aucune commande trouvée.</p></div></td></tr>';
+    return;
+  }
+  body.innerHTML = list.map(function(o){
+    var acts = '';
+    // FIX: Actions based on status + always show delete button
+    if (o.status === 'pending') {
+      acts = '<button class="ab ab-val" onclick="setOrderStatus('+o.id+',\'validated\')">✓ Valider</button>'
+           + '<button class="ab ab-ann" onclick="setOrderStatus('+o.id+',\'cancelled\')">✕ Annuler</button>';
+    } else if (o.status === 'validated') {
+      acts = '<button class="ab ab-liv" onclick="setOrderStatus('+o.id+',\'delivered\')">📦 Livré</button>'
+           + '<button class="ab ab-ann" onclick="setOrderStatus('+o.id+',\'cancelled\')">✕</button>';
+    } else if (o.status === 'delivered') {
+      acts = '<span style="color:#1e40af;font-size:.75rem;font-weight:700">✔ Livré</span>';
+    } else {
+      acts = '<span style="color:#991b1b;font-size:.75rem;font-weight:700">✕ Annulé</span>';
+    }
+    // FIX: Always show delete button
+    acts += '<button class="ab ab-red" onclick="deleteOrder('+o.id+')" style="font-size:.6rem;padding:.25rem .55rem" title="Supprimer cette commande">🗑</button>';
+    // FIX: Show detail button to see full order info
+    acts += '<button class="ab ab-gold" onclick="showOrderDetail('+o.id+')" style="font-size:.6rem;padding:.25rem .55rem" title="Voir détails">👁</button>';
+
+    return '<tr>'
+      +'<td class="td-m">#'+String(o.id).padStart(3,'0')+'</td>'
+      +'<td class="td-b">'+o.name+'</td>'
+      +'<td class="td-tel"><a href="tel:'+o.phone+'">📞 '+o.phone+'</a></td>'
+      +'<td style="white-space:nowrap;font-size:.82rem">'+(o.wilaya.split('-')[1] ? o.wilaya.split('-')[1].trim() : o.wilaya)+'</td>'
+      +'<td style="min-width:140px">'+renderOrderItems(o)+'</td>'
+      +'<td style="text-align:center;font-weight:700">'+o.qty+'</td>'
+      +'<td class="td-m" style="white-space:nowrap">'+(o.deliveryType||'Domicile')+'<br>'+o.delivery.toLocaleString()+' DA</td>'
+      +'<td class="td-pf" style="white-space:nowrap">'+o.total.toLocaleString()+' DA</td>'
+      +'<td class="td-addr" title="'+o.address+'">'+o.address+'</td>'
+      +'<td class="td-m" style="white-space:nowrap">'+o.date+'</td>'
+      +'<td><span class="badge b-'+o.status+'">'+(slbl[o.status]||o.status)+'</span></td>'
+      +'<td class="td-acts">'+acts+'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+// FIX 3: Delete single order
+function deleteOrder(id) {
+  var o = orders.find(function(x){ return x.id === id; });
+  if (!o) return;
+  if (!confirm('Supprimer la commande #'+String(id).padStart(3,'0')+' de '+o.name+' ?')) return;
+  orders = orders.filter(function(x){ return x.id !== id; });
+  saveOrders();
+  renderAdminStats(); renderCmd();
+  showToast('Commande supprimée', 't-err');
+}
+
+// FIX 4: Show full order detail in modal
+function showOrderDetail(id) {
+  var o = orders.find(function(x){ return x.id === id; });
+  if (!o) return;
+  document.getElementById('detailTitle').textContent = 'Commande #' + String(o.id).padStart(3,'0');
+  var rows = [
+    ['Client', o.name],
+    ['Téléphone', '<a href="tel:'+o.phone+'" style="color:var(--navy-mid);font-weight:700">'+o.phone+'</a>'],
+    ['Wilaya', o.wilaya],
+    ['Adresse', o.address],
+    ['Produit', o.product],
+    ['Prix unitaire', o.unit.toLocaleString() + ' DA'],
+    ['Quantité', o.qty],
+    ['Type livraison', o.deliveryType || 'Domicile'],
+    ['Frais livraison', o.delivery.toLocaleString() + ' DA'],
+    ['Sous-total', (o.unit * o.qty).toLocaleString() + ' DA'],
+    ['Date', o.date],
+    ['Statut', '<span class="badge b-'+o.status+'">'+(slbl[o.status]||o.status)+'</span>'],
+  ];
+  document.getElementById('detailContent').innerHTML = rows.map(function(r){
+    var isTotal = r[0] === 'Total';
+    return '<div class="detail-row">'
+      +'<span class="detail-label">'+r[0]+'</span>'
+      +'<span class="detail-value'+(isTotal?' detail-total':'')+'">'+r[1]+'</span>'
+      +'</div>';
+  }).join('')
+  + '<div class="detail-row" style="background:rgba(201,168,76,.08);padding:.8rem;margin-top:.5rem">'
+  + '<span class="detail-label" style="font-size:.9rem;font-weight:700">TOTAL</span>'
+  + '<span class="detail-value detail-total">'+o.total.toLocaleString()+' DA</span>'
+  + '</div>';
+
+  // Action buttons in detail modal
+  var dacts = '';
+  if (o.status === 'pending') {
+    dacts += '<button class="ab ab-val" onclick="setOrderStatus('+o.id+',\'validated\');closeOrderDetail()">✓ Valider</button>';
+    dacts += '<button class="ab ab-ann" onclick="setOrderStatus('+o.id+',\'cancelled\');closeOrderDetail()">✕ Annuler</button>';
+  } else if (o.status === 'validated') {
+    dacts += '<button class="ab ab-liv" onclick="setOrderStatus('+o.id+',\'delivered\');closeOrderDetail()">📦 Marquer Livré</button>';
+    dacts += '<button class="ab ab-ann" onclick="setOrderStatus('+o.id+',\'cancelled\');closeOrderDetail()">✕ Annuler</button>';
+  }
+  dacts += '<button class="ab ab-red" onclick="deleteOrder('+o.id+');closeOrderDetail()">🗑 Supprimer</button>';
+  document.getElementById('detailActions').innerHTML = dacts;
+  document.getElementById('orderDetailModal').classList.add('open');
+}
+function closeOrderDetail() {
+  document.getElementById('orderDetailModal').classList.remove('open');
+}
+
+function setOrderStatus(id, s) {
+  var o = orders.find(function(x){ return x.id === id; });
+  if (!o) return;
+  o.status = s;
+  saveOrders();
+  renderAdminStats(); renderCmd();
+  var msgs = {validated:'Commande validée ✓', cancelled:'Commande annulée', delivered:'Marquée comme livrée 📦'};
+  showToast(msgs[s] || 'Mis à jour', s === 'cancelled' ? 't-err' : s === 'validated' ? 't-gold' : 't-ok');
+}
+
+// ══════════════════════════════════════════════
+// ADMIN PRODUCTS
+// ══════════════════════════════════════════════
+function renderProd() {
+  document.getElementById('prodSub').textContent = PRODUCTS.length + ' produit(s)';
+  document.getElementById('prodGrid').innerHTML = PRODUCTS.map(function(p){
+    var imgHtml = p.img
+      ? '<img src="'+p.img+'" class="pcard-img" alt="'+p.name+'">'
+      : '<div class="pcard-ph">'+perfSvgAdmin(p.category)+'</div>';
+    return '<div class="pcard">'
+      +'<div class="pcard-top">'+imgHtml+'<span class="pcat">'+p.category+'</span></div>'
+      +'<p class="pname">'+p.name+'</p>'
+      +'<p class="pid">ID #'+String(p.id).padStart(3,'0')+'</p>'
+      +'<div class="pr-lbl">Prix (DA)</div>'
+      +'<div class="price-row">'
+      +'<input class="price-inp" type="number" id="pr-'+p.id+'" value="'+p.price+'" min="0" step="50">'
+      +'<span class="price-da">DA</span>'
+      +'<button class="ab ab-gold" onclick="savePrice('+p.id+')" style="padding:.4rem .7rem;font-size:.65rem">💾 Sauver</button>'
+      +'</div>'
+      +'<div class="pcard-foot">'
+      +'<span class="badge '+(p.sold_out?'b-sold':'b-stock')+'" id="pbadge-'+p.id+'">'+(p.sold_out?'Épuisé':'En Stock')+'</span>'
+      +'<div style="flex:1"></div>'
+      +'<button class="ab '+(p.sold_out?'ab-val':'ab-red')+'" id="psbtn-'+p.id+'" onclick="toggleSold('+p.id+')" style="font-size:.65rem">'+(p.sold_out?'↩ En stock':'⊘ Épuisé')+'</button>'
+      +'<button class="ab ab-gold" onclick="openEditProd('+p.id+')" style="font-size:.65rem;padding:.3rem .65rem">✎ Edit</button>'
+      +'<button class="ab ab-ann" onclick="deleteProd('+p.id+')" style="font-size:.65rem;padding:.3rem .65rem" title="Supprimer">🗑</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+function savePrice(id) {
+  var p = PRODUCTS.find(function(x){ return x.id === id; });
+  if (!p) return;
+  var v = parseInt(document.getElementById('pr-'+id).value);
+  if (isNaN(v) || v <= 0) { showToast('Prix invalide', 't-err'); return; }
+  p.price = v;
+  saveProducts();
+  showToast(p.name + ' → ' + v.toLocaleString() + ' DA ✓', 't-gold');
+}
+
+function deleteProd(id) {
+  var p = PRODUCTS.find(function(x){ return x.id === id; });
+  if (!p) return;
+  if (!confirm('Supprimer "' + p.name + '" ? Cette action est irréversible.')) return;
+  PRODUCTS.splice(PRODUCTS.indexOf(p), 1);
+  saveProducts();
+  renderProd(); renderAdminStats();
+  showToast(p.name + ' supprimé', 't-err');
+}
+
+function toggleSold(id) {
+  var p = PRODUCTS.find(function(x){ return x.id === id; });
+  if (!p) return;
+  p.sold_out = !p.sold_out;
+  saveProducts();
+  var badge = document.getElementById('pbadge-'+id);
+  badge.className = 'badge ' + (p.sold_out ? 'b-sold' : 'b-stock');
+  badge.textContent = p.sold_out ? 'Épuisé' : 'En Stock';
+  var btn = document.getElementById('psbtn-'+id);
+  btn.className = 'ab ' + (p.sold_out ? 'ab-val' : 'ab-red');
+  btn.textContent = p.sold_out ? '↩ En stock' : '⊘ Épuisé';
+  showToast(p.sold_out ? p.name+' marqué épuisé' : p.name+' remis en stock', p.sold_out ? 't-err' : 't-ok');
+}
+
+function openAddProd() {
+  document.getElementById('mTitle').textContent = 'Ajouter un Produit';
+  document.getElementById('mEditId').value = '';
+  document.getElementById('mName').value  = '';
+  document.getElementById('mPrice').value = '';
+  document.getElementById('mCat').value   = 'homme';
+  document.getElementById('mImgPrev').style.display = 'none';
+  document.getElementById('mImgFile').value = '';
+  pendingImg = '';
+  document.getElementById('prodModal').classList.add('show');
+}
+function openEditProd(id) {
+  var p = PRODUCTS.find(function(x){ return x.id === id; });
+  if (!p) return;
+  document.getElementById('mTitle').textContent = 'Modifier: ' + p.name;
+  document.getElementById('mEditId').value = id;
+  document.getElementById('mName').value  = p.name;
+  document.getElementById('mPrice').value = p.price;
+  document.getElementById('mCat').value   = p.category;
+  pendingImg = p.img || '';
+  var prev = document.getElementById('mImgPrev');
+  if (p.img) { prev.src = p.img; prev.style.display = 'block'; }
+  else { prev.style.display = 'none'; }
+  document.getElementById('prodModal').classList.add('show');
+}
+function closeProdModal() { document.getElementById('prodModal').classList.remove('show'); }
+function previewImg(input) {
+  var file = input.files[0]; if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    pendingImg = e.target.result;
+    var prev = document.getElementById('mImgPrev');
+    prev.src = pendingImg; prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+function saveProd() {
+  var name  = document.getElementById('mName').value.trim();
+  var price = parseInt(document.getElementById('mPrice').value);
+  var cat   = document.getElementById('mCat').value;
+  var eid   = document.getElementById('mEditId').value;
+  if (!name)          { showToast('Entrez un nom du produit', 't-err'); return; }
+  if (!price || price<=0) { showToast('Entrez un prix valide', 't-err'); return; }
+  if (eid) {
+    var p = PRODUCTS.find(function(x){ return x.id === parseInt(eid); });
+    if (p) { p.name = name; p.price = price; p.category = cat; if (pendingImg) p.img = pendingImg; }
+    showToast(name + ' modifié ✓', 't-gold');
+  } else {
+    PRODUCTS.push({id: Date.now(), name: name, price: price, category: cat, sold_out: false, img: pendingImg || ''});
+    showToast(name + ' ajouté ✓', 't-gold');
+  }
+  saveProducts();
+  closeProdModal();
+  renderProd(); renderAdminStats();
+}
+
+// ══════════════════════════════════════════════
+// ADMIN COMMENTS
+// ══════════════════════════════════════════════
+function renderCmt() {
+  document.getElementById('cmtSub').textContent = messages.length + ' message(s)';
+  var list = document.getElementById('cmtList');
+  if (!messages.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-ic">💬</div><p>Aucun commentaire reçu.</p></div>';
+    return;
+  }
+  list.innerHTML = messages.map(function(c){
+    return '<div class="cmt-card">'
+      +'<div class="cmt-head">'
+      +'<div><p class="cmt-name">'+c.name+'</p>'
+      +'<p class="cmt-email"><a href="mailto:'+c.email+'" style="color:var(--text-muted);text-decoration:none">'+c.email+'</a></p></div>'
+      +'<span class="cmt-date">'+c.date+'</span>'
+      +'</div>'
+      +'<p class="cmt-msg">&ldquo;'+c.message+'&rdquo;</p>'
+      +'</div>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+var toastTmr = null;
+function showToast(msg, cls) {
+  cls = cls || 't-ok';
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + cls;
+  void t.offsetWidth; t.classList.add('show');
+  if (toastTmr) clearTimeout(toastTmr);
+  toastTmr = setTimeout(function(){ t.classList.remove('show'); }, 3200);
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+renderFeatured();
+</script>
+</body>
+</html>
